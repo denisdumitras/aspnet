@@ -28,10 +28,18 @@ namespace Vidly.Controllers
         public ActionResult Index()
         {
             var movies = _context.Movies.Include(m => m.Genre).ToList();
-
-            return View(movies);
+            if(User.IsInRole(RoleName.CanManageMovies) || User.IsInRole(RoleName.CanManageAll))
+            {
+                return View("Index", movies);
+            }
+            else
+            {
+                return View("ReadOnlyList", movies);
+            }
         }
 
+        [Authorize(Roles = RoleName.CanManageMovies)]
+        [Authorize(Roles = RoleName.CanManageAll)]
         public ActionResult New()
         {
             var genres = _context.Genres.ToList();
@@ -43,7 +51,8 @@ namespace Vidly.Controllers
             return View("MovieForm", viewModel);
 
         }
-
+        [Authorize(Roles = RoleName.CanManageMovies)]
+        [Authorize(Roles = RoleName.CanManageAll)]
         public ActionResult Edit(int id)
         {
             var movie = _context.Movies.SingleOrDefault(c => c.Id == id);
@@ -58,7 +67,8 @@ namespace Vidly.Controllers
 
             return View("MovieForm", viewModel);
         }
-
+        [Authorize(Roles = RoleName.CanManageMovies)]
+        [Authorize(Roles = RoleName.CanManageAll)]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -72,8 +82,8 @@ namespace Vidly.Controllers
             }
             return View(movie);
         }
-
-        // POST: Things/Delete/5
+        [Authorize(Roles = RoleName.CanManageMovies)]
+        [Authorize(Roles = RoleName.CanManageAll)]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -83,7 +93,8 @@ namespace Vidly.Controllers
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
-
+        [Authorize(Roles = RoleName.CanManageMovies)]
+        [Authorize(Roles = RoleName.CanManageAll)]
         [HttpPost]
         public ActionResult Save(Movie movie)
         {
