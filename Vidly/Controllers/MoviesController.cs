@@ -37,9 +37,7 @@ namespace Vidly.Controllers
                 return View("ReadOnlyList", movies);
             }
         }
-
-        [Authorize(Roles = RoleName.CanManageMovies)]
-        [Authorize(Roles = RoleName.CanManageAll)]
+        [Authorize(Roles = "CanManageAll, CanManageMovies")]
         public ActionResult New()
         {
             var genres = _context.Genres.ToList();
@@ -51,8 +49,7 @@ namespace Vidly.Controllers
             return View("MovieForm", viewModel);
 
         }
-        [Authorize(Roles = RoleName.CanManageMovies)]
-        [Authorize(Roles = RoleName.CanManageAll)]
+        [Authorize(Roles = "CanManageAll, CanManageMovies")]
         public ActionResult Edit(int id)
         {
             var movie = _context.Movies.SingleOrDefault(c => c.Id == id);
@@ -67,8 +64,7 @@ namespace Vidly.Controllers
 
             return View("MovieForm", viewModel);
         }
-        [Authorize(Roles = RoleName.CanManageMovies)]
-        [Authorize(Roles = RoleName.CanManageAll)]
+        [Authorize(Roles = "CanManageAll, CanManageMovies")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -82,8 +78,8 @@ namespace Vidly.Controllers
             }
             return View(movie);
         }
-        [Authorize(Roles = RoleName.CanManageMovies)]
-        [Authorize(Roles = RoleName.CanManageAll)]
+
+        [Authorize(Roles = "CanManageAll, CanManageMovies")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -93,8 +89,8 @@ namespace Vidly.Controllers
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
-        [Authorize(Roles = RoleName.CanManageMovies)]
-        [Authorize(Roles = RoleName.CanManageAll)]
+
+        [Authorize(Roles = "CanManageAll, CanManageMovies")]
         [HttpPost]
         public ActionResult Save(Movie movie)
         {
